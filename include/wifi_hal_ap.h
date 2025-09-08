@@ -569,14 +569,28 @@ INT wifi_getApAssociatedDevice(INT ap_index, mac_address_t *output_deviceMacAddr
 #endif
 
 typedef enum {
+    WIFI_ACCESS_ACCEPT_STATUS = 0,
+    WIFI_EAP_SUCCESS_STATUS = 3,
+    WIFI_EAP_FAILURE_STATUS = 23
+} wifi_eap_status_code_t;
+
+typedef enum {
     WIFI_REASON_UNSPECIFIED = 1,
     WIFI_REASON_PREV_AUTH_NOT_VALID = 2,
     WIFI_REASON_DEAUTH_LEAVING = 3,
     WIFI_REASON_STA_REQ_ASSOC_WITHOUT_AUTH = 9,
+    WIFI_REASON_INVALID_IE = 13,
     WIFI_REASON_MICHAEL_MIC_FAILURE = 14,
     WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT = 15,
+    WIFI_REASON_GROUP_KEY_UPDATE_TIMEOUT = 16,
+    WIFI_REASON_IE_IN_4WAY_DIFFERS = 17,
+    WIFI_REASON_GROUP_CIPHER_NOT_VALID = 18,
+    WIFI_REASON_PAIRWISE_CIPHER_NOT_VALID = 19,
     WIFI_REASON_AKMP_NOT_VALID = 20,
+    WIFI_REASON_UNSUPPORTED_RSN_IE_VERSION = 21,
+    WIFI_REASON_INVALID_RSN_IE_CAPAB = 22,
     WIFI_REASON_IEEE_802_1X_AUTH_FAILED = 23,
+    WIFI_REASON_CIPHER_SUITE_REJECTED = 24,
     WIFI_REASON_INVALID_PMKID = 49
 } wifi_reason_code_t;
 
@@ -1678,7 +1692,10 @@ typedef INT (*wifi_apMaxClientRejection_callback)(INT apIndex, char *MAC, INT re
  * @retval WIFI_HAL_ERROR   If any error is detected.
  */
 typedef INT ( * wifi_apStatusCode_callback)(int apIndex, char *src_mac,char *dest_mac, int frame_type ,int status);
-typedef INT ( * wifi_radiusEapFailure_callback)(INT apIndex, INT failure_reason);
+
+typedef INT ( * wifi_radiusEapFailure_callback)(INT apIndex, mac_address_t sta_mac, INT failure_reason);
+
+typedef INT ( * wifi_radiusEapStatus_callback)(INT apIndex, char *mac, int reason);
 
 /**
  * @brief Registers a callback function for RADIUS/EAP failure events.
@@ -1689,6 +1706,8 @@ typedef INT ( * wifi_radiusEapFailure_callback)(INT apIndex, INT failure_reason)
  *
  * @param callback_proc Pointer to the callback function to register.
  */
+
+void wifi_hal_radius_eap_status_callback_register(wifi_radiusEapStatus_callback callback_proc);
 void wifi_radiusEapFailure_callback_register(wifi_radiusEapFailure_callback callback_proc);
 
 /* wifi_apStatusCode_callback_register() function */
