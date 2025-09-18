@@ -3197,6 +3197,7 @@ typedef struct {
   UINT    inum_sta;                   /**< configuring interop stations */
   UCHAR vendor_elements[WIFI_AP_MAX_VENDOR_IE_LEN]; /**< The vendor elements to be added to beacon/probe response frames. Includes IE ID (0xDD), Length, and Payload */
   USHORT vendor_elements_len;        /**< Length of vendor_elements currently stored since it is not null terminated */
+  char interop_info[128]; /**<Interop Details */
 } __attribute__((packed)) wifi_front_haul_bss_t;
 
 /**
